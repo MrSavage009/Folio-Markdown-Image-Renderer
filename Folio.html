@@ -43,6 +43,44 @@
             min-height: 100vh;
         }
 
+
+
+
+
+
+.render-card .katex {
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    line-height: 1.2 !important;
+}
+.render-card .katex-display {
+    margin: 1.2em 0 !important;
+    overflow: visible !important;
+}
+
+
+
+
+
+.render-card .math-fallback-plain {
+    display: inline-block;
+    font-family: var(--font-body);
+    color: var(--hdr);
+    font-weight: 600;
+}
+
+.render-card .math-fallback-display {
+    display: block;
+    text-align: center;
+    font-size: 1.3em;
+    font-weight: 700;
+    margin: 1.2em 10px;
+    padding: 0.4em 0;
+}
+
+
+
+
         /* --- UI CONTAINER --- */
         .ui-header {
             width: 100%;
@@ -539,6 +577,17 @@
             pointer-events: none; 
             z-index: -9999; 
             width: var(--card-w);
+        }
+
+
+        /* --- FIX: TALL MATH LINE SPACING --- */
+        .render-card .katex-display {
+            margin: 0.6em 0 !important;
+        }
+        .render-card p.math-block {
+            line-height: 1.9 !important;
+            padding-top: 0.4em !important;
+            padding-bottom: 0.4em !important;
         }
         
         /* CARD DENSITY & STRUCTURAL INTEGRITY (BLOCK LAYOUT FIX) */
@@ -1166,6 +1215,19 @@
         });
     }
 
+function plainTextFromLatex(latex) {
+        return latex
+            .replace(/\\text\{([^}]*)\}/g, '$1')
+            .replace(/\\rightarrow|\\to/g, '⟶')
+            .replace(/\\Rightarrow/g, '⟹')
+            .replace(/\\left\{|\\right\}/g, '')
+            .replace(/\\\{/g, '{')
+            .replace(/\\\}/g, '}')
+            .replace(/\\,/g, ' ')
+            .replace(/\\;/g, ' ')
+            .trim();
+    }
+
     function renderMathInText(text) {
         const fragment = document.createDocumentFragment();
         let i = 0;
@@ -1191,16 +1253,30 @@
                     fragment.appendChild(document.createTextNode(text.slice(lastIndex, result.start)));
                 }
                 try {
-                    const html = katex.renderToString(result.latex.trim(), {
-                        throwOnError: false,
-                        displayMode: result.displayMode,
-                        strict: false,
-                        trust: false
-                    });
-                    const wrapper = document.createElement('span');
-                    wrapper.className = 'katex-rendered';
-                    wrapper.innerHTML = html;
-                    fragment.appendChild(wrapper);
+                    const hasDiacritics = /[\u0100-\u024F]/.test(result.latex);
+
+                    if (hasDiacritics) {
+                        // KaTeX's font metrics don't cover macron/diacritic Latin
+                        // characters and silently drops them. Render this block
+                        // as plain text instead.
+                        const wrapper = document.createElement(result.displayMode ? 'div' : 'span');
+                        wrapper.className = result.displayMode
+                            ? 'katex-rendered math-fallback-plain math-fallback-display'
+                            : 'katex-rendered math-fallback-plain';
+                        wrapper.textContent = plainTextFromLatex(result.latex.trim());
+                        fragment.appendChild(wrapper);
+                    } else {
+                        const html = katex.renderToString(result.latex.trim(), {
+                            throwOnError: false,
+                            displayMode: result.displayMode,
+                            strict: false,
+                            trust: false
+                        });
+                        const wrapper = document.createElement('span');
+                        wrapper.className = 'katex-rendered';
+                        wrapper.innerHTML = html;
+                        fragment.appendChild(wrapper);
+                    }
                 } catch (e) {
                     console.error("KaTeX Error:", e);
                     fragment.appendChild(document.createTextNode(text.slice(result.start, result.end + 1)));
@@ -1244,6 +1320,8 @@
         }
         return null;
     }
+
+
 
     // ==================== BRACKET & ROOT HIGHLIGHTING ====================
     function highlightBrackets(element) {
@@ -1367,6 +1445,19 @@
         }
     }
 
+    function fixMathParagraphSpacing(element) {
+        const paragraphs = element.querySelectorAll('p');
+        paragraphs.forEach(p => {
+            if (p.querySelector('.katex-display')) {
+                p.classList.add('math-block');
+            }
+        });
+    }
+
+
+
+
+
     // ==================== HEADER DETECTOR (MYSTIC UPGRADE) ====================
     // This function detects traditional headers (H1-H4) AND "Thought Headers" 
     // which are written as bolded paragraphs (e.g., **Analyzing the Prompt**)
@@ -1386,9 +1477,13 @@
         return false;
     }
 
+
+
+
+
     // ==================== IMAGE GENERATION ====================
     async function generateImages() {
-        const input = document.getElementById('markdown-input').value;
+        const input = document.getElementById('markdown-input').value.normalize('NFC');
         const staging = document.getElementById('render-staging');
         const preview = document.getElementById('preview-area');
         const btn = document.getElementById('gen-btn');
@@ -1418,7 +1513,8 @@
         };
         
         // Escape bare < and > if they aren't part of HTML tags to prevent marked.js from breaking
-        let safeInput = input.replace(/<(?![a-zA-Z/])/g, '&lt;').replace(/(?<![a-zA-Z"'])\>/g, '&gt;');
+        let safeInput = input.replace(/<(?![a-zA-Z/])/g, '&lt;');
+
         
         safeInput = safeInput
             .replace(/\$\$[\s\S]*?\$\$/g, protect)
@@ -1430,6 +1526,11 @@
             });
 
         let html = marked.parse(safeInput);
+
+
+        // Force all instances of mālak and mullak to be wrapped in a stable span 
+        // if they aren't already captured, preventing glyph fragmentation.
+        //html = html.replace(/ā/g, '<span style="display:inline-block; line-height:1; vertical-align:baseline;">ā</span>');
         
         // Mystic Logic Vectors (Phonetic Drift Replacements)
         html = html.replace(/-&amp;gt;/g, '<span class="drift-vector">⟶</span>');
@@ -1453,6 +1554,8 @@
         normalizeLists(measureDiv);
         highlightBrackets(measureDiv);
         applySemanticMarkup(measureDiv);
+
+        fixMathParagraphSpacing(measureDiv);
         
         void measureDiv.offsetHeight;
         await document.fonts.ready;
