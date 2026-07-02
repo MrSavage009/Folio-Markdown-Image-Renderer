@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Edge-to-Edge Social Image Engine v8.9 (Mystic Edition)</title>
+    <title>Folio - Markdown Image Renderer v14 (Mystic Edition)</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
@@ -1432,7 +1432,9 @@
         let html = marked.parse(safeInput);
         
         // Mystic Logic Vectors (Phonetic Drift Replacements)
+        html = html.replace(/-&amp;gt;/g, '<span class="drift-vector">⟶</span>');
         html = html.replace(/-&gt;/g, '<span class="drift-vector">⟶</span>');
+        html = html.replace(/=&amp;gt;/g, '<span class="logic-vector">⟹</span>');
         html = html.replace(/=&gt;/g, '<span class="logic-vector">⟹</span>');
         html = html.replace(/->/g, '<span class="drift-vector">⟶</span>');
         html = html.replace(/=>/g, '<span class="logic-vector">⟹</span>');
