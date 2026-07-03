@@ -119,7 +119,7 @@ All dependencies are loaded from CDN. The entire application is a single HTML fi
 ## Quick Start
 
 ```bash
-git clone https://github.com/MrSavage009/Folio.git
+git clone https://github.com/MrSavage009/Folio-Markdown-Image-Renderer/
 cd Folio
 # Open index.html in your browser
 ```
