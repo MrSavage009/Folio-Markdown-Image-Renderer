@@ -120,7 +120,7 @@ All dependencies are loaded from CDN. The entire application is a single HTML fi
 
 ```bash
 git clone https://github.com/MrSavage009/Folio-Markdown-Image-Renderer/
-cd Folio
+cd Folio-Markdown-Image-Renderer
 # Open index.html in your browser
 ```
 
