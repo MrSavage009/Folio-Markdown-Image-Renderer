@@ -118,29 +118,17 @@ All dependencies are loaded from CDN. The entire application is a single HTML fi
 
 ## Quick Start
 
+Option 1:
+
+Simply download `index.html` and open it directly.
+
+Option 2:
+
 ```bash
 git clone https://github.com/MrSavage009/Folio-Markdown-Image-Renderer/
 cd Folio-Markdown-Image-Renderer
-# Open index.html in your browser
-```
-
-Or simply download `index.html` and open it directly.
-
----
-
-## File Structure
-
-```
-.
-├── index.html          # Complete application (self‑contained)
-├── README.md           # This file
-├── or1.jpg             # Example output – Orange theme
-├── nord1.jpg           # Example output – Nord theme (part 1)
-├── nord2.jpg           # Example output – Nord theme (part 2)
-├── nord3.jpg           # Example output – Nord theme (part 3)
-├── crimson1.jpg        # Example output – Crimson theme (part 1)
-├── crimson2.jpg        # Example output – Crimson theme (part 2)
-└── crimson3.jpg        # Example output – Crimson theme (part 3)
+# Then open index.html in your browser
+start index.html 
 ```
 
 ---
