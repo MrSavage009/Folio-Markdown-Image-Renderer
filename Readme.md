@@ -9,7 +9,7 @@
     <img src="https://img.shields.io/badge/Live%20Demo-Deploy-orange?style=for-the-badge&logo=vercel" alt="Live Demo">
   </a>
 </p>
----
+
 
 ## Quick Preview
 
@@ -85,7 +85,7 @@ Everything runs in your browser. No uploads, no API keys, no server dependencies
 ## How to Use
 
 1. Open `index.html` in any modern browser (Chrome, Firefox, Edge, Safari).  
-   *GitHub does not host HTML files as live pages—you must download and open the file locally.*
+   *GitHub has the live page at the button on the top. But you can also download and open the file locally. This might be better for batch downloading multiple images to your computer.*
 2. Paste your markdown text into the text area.
 3. Select a **theme** and **semantic mode**.
 4. Adjust card **width**, **max height**, and **resolution** using the sliders.
