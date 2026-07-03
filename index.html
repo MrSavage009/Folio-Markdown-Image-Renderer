@@ -1195,7 +1195,7 @@
     // ==================== MATH RENDERING ====================
     function renderMathInElement(element) {
         if (typeof katex === 'undefined') {
-            console.warn('KaTeX not loaded, skipping math rendering');
+            console.warn('KaTeX not loaded, skipping the math rendering');
             return;
         }
         const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
