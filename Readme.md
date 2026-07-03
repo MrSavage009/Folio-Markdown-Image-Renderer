@@ -11,10 +11,10 @@
 </p>
 
 
-## Quick Preview
+## Quick Preview Video
 
 <p align="center">
-  <img src="or1.jpg" alt="Folio render example" style="width: 350px; max-width: 100%;">
+  <img src="live.gif" alt="Folio render example" style="width: 350px; max-width: 100%;">
 </p>
 
 ---
