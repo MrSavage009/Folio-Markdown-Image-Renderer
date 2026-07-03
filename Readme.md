@@ -7,7 +7,7 @@
 ## Quick Preview
 
 <p align="center">
-  <img src="or1.jpg" alt="Folio render example" width="80%">
+  <img src="or1.jpg" alt="Folio render example" style="width: 200px; max-width: 100%;">
 </p>
 
 ---
